@@ -20,7 +20,11 @@ for filename in os.listdir(source_folder):
         def extract_day(df):
             df['day'] = pd.to_datetime(df['InvoiceDate']).dt.day
             return df
-
+    
+        def extract_year(df):
+            df['year'] = pd.to_datetime(df['InvoiceDate']).dt.year
+            return df
+        
         def extract_month(df):
             df['month'] = pd.to_datetime(df['InvoiceDate']).dt.month
             return df
@@ -36,6 +40,10 @@ for filename in os.listdir(source_folder):
         def extract_quarter(df):
             df['quarter'] = pd.to_datetime(df['InvoiceDate']).dt.quarter
             return df
+        
+        def add_revenue_column(df):
+            df['Revenue'] = df['Quantity'] * df['UnitPrice']
+            return df
 
         def drop_null_values(df):
             df = df.dropna()
@@ -43,16 +51,16 @@ for filename in os.listdir(source_folder):
 
         # Apply functions to extract additional columns
         df = extract_day(df)
+        df = extract_year(df)
         df = extract_month(df)
         df = extract_time(df)
         df = extract_date(df)
         df = extract_quarter(df)
 
+        df = add_revenue_column(df)
+
         # Drop rows with null values
         df = drop_null_values(df)
-
-        # Output resulting DataFrame to new CSV file
-        #df.to_csv('new_csv_file.csv', index=False)
 
         # Write the processed data to the output CSV file
         df.to_csv(os.path.join(destination_folder, 'new_csv_file'), index=False)
