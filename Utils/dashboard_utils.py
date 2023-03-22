@@ -1,6 +1,10 @@
 import pandas as pd
+
 def filter_by_date(df, start_date, end_date):
-    return df[(df['InvoiceDate'] >= start_date) & (df['InvoiceDate'] <= end_date)]
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
+    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
+    return df[(df['InvoiceDate'].dt.date >= start_date) & (df['InvoiceDate'].dt.date <= end_date)]
 
 def get_revenue_by_product(df, start_date, end_date):
     filtered_df = filter_by_date(df, start_date, end_date)
@@ -25,8 +29,8 @@ def bottom_products(df, start_date, end_date):
 
 def customers_per_day(df, start_date, end_date):
     filtered_df = filter_by_date(df, start_date, end_date)
-    df['date_column'] = pd.to_datetime(df['date_column'].dt.date)
-    return filtered_df.groupby('date_column')['CustomerID'].nunique().reset_index()
+    df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate']).dt.date
+    return filtered_df.groupby('InvoiceDate')['CustomerID'].nunique().reset_index()
 
 def avg_units_per_customer(df,start_date, end_date):
     filtered_df = filter_by_date(df, start_date, end_date)
