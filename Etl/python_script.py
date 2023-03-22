@@ -63,5 +63,5 @@ for filename in os.listdir(source_folder):
         df = drop_null_values(df)
 
         # Write the processed data to the output CSV file
-        df.to_csv(os.path.join(destination_folder, 'new_csv_file'), index=False)
+        df.to_csv(os.path.join(destination_folder, 'new_csv_file.csv'), index=False)
 
